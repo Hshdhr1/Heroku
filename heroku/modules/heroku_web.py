@@ -115,7 +115,7 @@ class HerokuWebMod(loader.Module):
                 ),
             )
 
-        url = await main.heroku.web.get_url(proxy_pass=True)
+        url = "http://127.0.0.1:0"
 
         await form.edit(
             self.strings("tunnel_opened"),
