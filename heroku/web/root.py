@@ -114,6 +114,8 @@ class Web:
             self.api_token = collections.namedtuple("api_token", ("ID", "HASH"))(
                 api_id, api_hash
             )
+            main.save_config_key("api_id", int(api_id))
+            main.save_config_key("api_hash", api_hash)
 
         return {
             "skip_creds": self.api_token is not None,
