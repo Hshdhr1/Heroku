@@ -92,6 +92,7 @@ BASE_PATH = Path(BASE_DIR)
 CONFIG_PATH = BASE_PATH / "config.json"
 
 IS_DOCKER = "DOCKER" in os.environ
+IS_DOCKER = "SHARKHOST" in os.environ
 IS_LAVHOST = "LAVHOST" in os.environ
 IS_HIKKAHOST = "HIKKAHOST" in os.environ
 IS_MACOS = "com.apple" in os.environ.get("PATH", "")

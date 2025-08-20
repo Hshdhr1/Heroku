@@ -106,14 +106,21 @@ class Web:
             )
         )]
 
-    @aiohttp_jinja2.template("root.jinja2")
-    async def root(self, _):
-        return {
-            "skip_creds": self.api_token is not None,
-            "tg_done": bool(self.client_data),
-            "lavhost": "LAVHOST" in os.environ,
-            "platform_emoji": self._platform_emoji,
-        }
+@aiohttp_jinja2.template("root.jinja2")
+async def root(self, _):
+    if "SHARKHOST" in os.environ:
+        api_id = 27802914
+        api_hash = "10892afd16158709a22671df1bb5b907"
+        self.api_token = collections.namedtuple("api_token", ("ID", "HASH"))(
+            api_id, api_hash
+        )
+
+    return {
+        "skip_creds": self.api_token is not None,
+        "tg_done": bool(self.client_data),
+        "lavhost": "LAVHOST" in os.environ,
+        "platform_emoji": self._platform_emoji,
+    }
 
     async def check_session(self, request: web.Request) -> web.Response:
         return web.Response(body=("1" if self._check_session(request) else "0"))
@@ -321,6 +328,9 @@ class Web:
     async def send_tg_code(self, request: web.Request) -> web.Response:
         if not self._check_session(request):
             return web.Response(status=401, body="Authorization required")
+            
+        if self.client_data and "SHARKHOST" in os.environ:
+            return web.Response(status=403, body="Forbidden by SharkHost EULA")
 
         if self.client_data and "LAVHOST" in os.environ:
             return web.Response(status=403, body="Forbidden by host EULA")
